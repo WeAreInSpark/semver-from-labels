@@ -53,7 +53,7 @@ if ((!$PullRequestNumber) -and ($env:GH_REF -match "\d+\/merge")) {
         RetryIntervalSec  = 2
         MaximumRetryCount = 5
     }
-    $PullRequestNumber = (Invoke-RestMethod @params) | Where-Object { $_.merge_commit_sha -eq $env:GitHubSHA } | Select-Object -ExpandProperty number
+    $PullRequestNumber = (Invoke-RestMethod @params) | Where-Object { $_.merge_commit_sha -eq $env:GH_SHA } | Select-Object -ExpandProperty number
 }
 
 if (!$PullRequestNumber) {
