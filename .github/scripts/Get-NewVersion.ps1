@@ -28,14 +28,21 @@ param (
     [Parameter()]
     [string]$GitHubToken = $env:GH_TOKEN,
 
+    [Parameter()]
+    [string]$GitHubRef = $env:GH_REF,
+
     [Parameter(Mandatory)]
     [string]$Prefix,
 
-    [Parameter(Mandatory)]
+    [Parameter()]
     [int]$PullRequestNumber
 )
 
 $gitHubAuthenticationHeader = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($GitHubToken)")) }
+
+if ($GitHubRef -match "\d+\/merge") {
+    $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
+}
 
 # Find PR based on ID
 $params = @{
