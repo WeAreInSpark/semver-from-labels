@@ -26,10 +26,8 @@ param (
     [string]$Repository = $env:REPOSITORY,
 
     [Parameter()]
-    [string]$GitHubToken = $env:GH_TOKEN,
-
-    [Parameter()]
-    [string]$GitHubRef = $env:GH_REF,
+    [AllowEmptyString()]
+    [string]$GitHubToken,
 
     [Parameter(Mandatory)]
     [string]$Prefix,
@@ -38,10 +36,16 @@ param (
     [int]$PullRequestNumber
 )
 
+if(!$GitHubToken){
+    $GitHubToken = $env:GH_TOKEN
+}
+
 $gitHubAuthenticationHeader = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($GitHubToken)")) }
 
-if ($GitHubRef -match "\d+\/merge") {
+if ((!PullRequestNumber) -and ($env:GH_REF -match "\d+\/merge")) {
     $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
+} else {
+    write-error "can't find pull request. run this from a merge commit or enter a pull request number."
 }
 
 # Find PR based on ID

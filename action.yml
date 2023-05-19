@@ -1,8 +1,11 @@
-name: "Get new version for tag based on SemVer"
+name: "Get new version for tag based on PR labels"
 
 inputs:
   pullRequestNumber:
     description: "Number of the pull request"
+    required: false
+  repoToken:
+    description: "Token for the repo. will be github_token by default."
     required: false
   prefix:
     description: "Prefix of the tag"
@@ -26,7 +29,11 @@ runs:
         if ("${{ inputs.pullRequestNumber }}") {
           $params.Add("PullRequestNumber", "${{ inputs.pullRequestNumber }}")
         }
-        ./.github/scripts/Get-NewVersion.ps1 @params
+        if ("${{ inputs.pullRerepoTokenquestNumber }}") {
+          $params.Add("repoToken", "${{ inputs.repoToken }}")
+        }
+
+        ./scripts/Get-NewVersion.ps1 @params
       env:
         REPOSITORY: ${{ github.repository }}
         GH_TOKEN: ${{ github.token }}
