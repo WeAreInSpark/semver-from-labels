@@ -4,7 +4,7 @@ inputs:
   pullRequestNumber:
     description: "Number of the pull request"
     required: false
-  repoToken:
+  gitHubToken:
     description: "Token for the repo. will be github_token by default."
     required: false
   prefix:
@@ -34,8 +34,8 @@ runs:
         if ("${{ inputs.pullRequestNumber }}") {
           $params.Add("PullRequestNumber", "${{ inputs.pullRequestNumber }}")
         }
-        if ("${{ inputs.repoToken }}") {
-          $params.Add("repoToken", "${{ inputs.repoToken }}")
+        if ("${{ inputs.GitHubToken }}") {
+          $params.Add("GitHubToken", "${{ inputs.gitHubToken }}")
         }
 
         ${{ github.action_path }}/scripts/Get-NewVersion.ps1 @params
