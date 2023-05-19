@@ -1,5 +1,5 @@
-name: "Get new version for tag based on PR labels"
-
+name: Get new version for tag based on PR labels
+description: Get new version for tag based on PR labels
 inputs:
   pullRequestNumber:
     description: "Number of the pull request"
@@ -29,7 +29,7 @@ runs:
         if ("${{ inputs.pullRequestNumber }}") {
           $params.Add("PullRequestNumber", "${{ inputs.pullRequestNumber }}")
         }
-        if ("${{ inputs.pullRerepoTokenquestNumber }}") {
+        if ("${{ inputs.repoToken }}") {
           $params.Add("repoToken", "${{ inputs.repoToken }}")
         }
 
