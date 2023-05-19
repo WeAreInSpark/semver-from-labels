@@ -19,10 +19,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: checkout
-      uses: actions/checkout@v3
-      with:
-        path: ${{ runner.temp }}
+    # - name: checkout
+    #   uses: actions/checkout@v3
+    #   with:
+    #     path: ${{ runner.temp }}
 
     - name: get-new-version
       id: getnewversion
@@ -38,7 +38,7 @@ runs:
           $params.Add("repoToken", "${{ inputs.repoToken }}")
         }
 
-        ${{ runner.temp }}/scripts/Get-NewVersion.ps1 @params
+        ${{ github.action_path }}/scripts/Get-NewVersion.ps1 @params
       env:
         REPOSITORY: ${{ github.repository }}
         GH_TOKEN: ${{ github.token }}
