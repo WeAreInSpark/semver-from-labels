@@ -9,7 +9,7 @@ inputs:
     required: false
   prefix:
     description: "Prefix of the tag"
-    required: true
+    required: false
 
 outputs:
   newversion:

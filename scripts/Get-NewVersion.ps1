@@ -30,6 +30,7 @@ param (
     [string]$GitHubToken,
 
     [Parameter(Mandatory)]
+    [AllowEmptyString()]
     [string]$Prefix,
 
     [Parameter()]
