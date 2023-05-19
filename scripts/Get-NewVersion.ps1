@@ -46,6 +46,7 @@ $gitHubAuthenticationHeader = @{ Authorization = "Basic " + [Convert]::ToBase64S
 if ((!$PullRequestNumber) -and ($env:GH_REF -match "\d+\/merge")) {
     $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
 } else {
+    write-host $env:GH_REF
     write-error "can't find pull request. run this from a merge commit or enter a pull request number."
 }
 
