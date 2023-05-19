@@ -43,7 +43,7 @@ if (!$GitHubToken) {
 
 $gitHubAuthenticationHeader = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($GitHubToken)")) }
 
-if ((!PullRequestNumber) -and ($env:GH_REF -match "\d+\/merge")) {
+if ((!$PullRequestNumber) -and ($env:GH_REF -match "\d+\/merge")) {
     $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
 } else {
     $params = @{
