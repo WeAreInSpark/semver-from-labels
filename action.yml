@@ -43,3 +43,4 @@ runs:
         REPOSITORY: ${{ github.repository }}
         GH_TOKEN: ${{ github.token }}
         GH_REF: ${{ github.ref }}
+        GH_SHA: ${{ github.sha }}
