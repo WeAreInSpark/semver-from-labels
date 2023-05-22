@@ -43,17 +43,19 @@ if (!$GitHubToken) {
 
 $gitHubAuthenticationHeader = @{ Authorization = "Basic " + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($GitHubToken)")) }
 
-if ((!$PullRequestNumber -gt 0) -and ($env:GH_REF -match "\d+\/merge")) {
-    $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
-} else {
-    $params = @{
-        uri               = "https://api.github.com/repos/$Repository/pulls?state=closed"
-        Method            = 'GET'
-        Headers           = $gitHubAuthenticationHeader
-        RetryIntervalSec  = 2
-        MaximumRetryCount = 5
+if (!$PullRequestNumber -gt 0) {
+    if ($env:GH_REF -match "\d+\/merge") {
+        $PullRequestNumber = $GitHubRef | Select-String -Pattern "\d+(?=\/merge)" | ForEach-Object { $_.Matches.Value }
+    } else {
+        $params = @{
+            uri               = "https://api.github.com/repos/$Repository/pulls?state=closed"
+            Method            = 'GET'
+            Headers           = $gitHubAuthenticationHeader
+            RetryIntervalSec  = 2
+            MaximumRetryCount = 5
+        }
+        $PullRequestNumber = (Invoke-RestMethod @params) | Where-Object { $_.merge_commit_sha -eq $env:GH_SHA } | Select-Object -ExpandProperty number
     }
-    $PullRequestNumber = (Invoke-RestMethod @params) | Where-Object { $_.merge_commit_sha -eq $env:GH_SHA } | Select-Object -ExpandProperty number
 }
 
 if (!$PullRequestNumber) {
@@ -61,7 +63,7 @@ if (!$PullRequestNumber) {
 }
 
 
-# Find PR based on ID
+# Find PR based on number
 $params = @{
     uri               = "https://api.github.com/repos/$Repository/pulls/$($PullRequestNumber)?state=closed"
     Method            = "GET"
