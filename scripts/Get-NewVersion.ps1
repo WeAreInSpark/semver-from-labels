@@ -29,7 +29,7 @@ param (
     [AllowEmptyString()]
     [string]$GitHubToken,
 
-    [Parameter(Mandatory)]
+    [Parameter()]
     [AllowEmptyString()]
     [string]$Prefix,
 
@@ -121,9 +121,13 @@ do {
     Start-Sleep -Seconds 1
 } while ($response)
 
-$tags = $allTags | Where-Object { $_.name -match "^$Prefix" }
+$tags = $allTags | Where-Object { $_.name -match "^$($Prefix)v\d+\.\d+\.\d+" }
 
-Write-Host "Calculating new version for $Prefix"
+if ($Prefix) {
+    Write-Host "Calculating new version for tag with prefix $Prefix"
+} else {
+    Write-Host "Calculating new version for tag"
+}
 
 foreach ($tag in $tags) {
     $params = @{
@@ -148,7 +152,12 @@ if ($pullRequest.closed_at) {
 
 # If there are no tags, this is the first tag of the workload
 if (!$tags) {
-    Write-Host "$Prefix has no tags yet"
+    if ($Prefix) {
+        Write-Host "No SemVer tags exist with prefix $Prefix yet"
+    } else {
+        Write-Host "No SemVer tags exist yet"
+    }
+
     $newVersion = "$($Prefix)v1.0.0"
     Write-Host "New version is: $newVersion`n"
     Write-Output "newVersion=$newVersion" >> $env:GITHUB_OUTPUT
