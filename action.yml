@@ -15,6 +15,9 @@ outputs:
   newversion:
     description: New version of the tag
     value: ${{ steps.getnewversion.outputs.newVersion }}
+  pullRequestNumber:
+    description: Number of the pull request
+    value: ${{ steps.getnewversion.outputs.pullRequestNumber }}
 
 runs:
   using: "composite"

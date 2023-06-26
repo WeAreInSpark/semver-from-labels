@@ -58,7 +58,10 @@ if (!$PullRequestNumber -gt 0) {
     }
 }
 
-if (!$PullRequestNumber) {
+if ($PullRequestNumber) {
+    Write-Host "Pull request number is $PullRequestNumber"
+    Write-Output "pullRequestNumber=$PullRequestNumber" >> $env:GITHUB_OUTPUT
+} else {
     Write-Error "Can't find pull request. Run this from a merge commit or enter a pull request number."
 }
 
